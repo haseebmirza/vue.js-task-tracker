@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-white rounded-lg shadow-md">
+  <div class="p-6 bg-white rounded-lg shadow-md" :class="{ 'dark-mode': themeStore.darkMode }">
     <h2 class="text-xl font-bold mb-4">Add a task</h2>
     <form @submit.prevent="handleSubmit" class="flex items-center space-x-2">
       <input v-model="taskText"
@@ -17,18 +17,28 @@
 <script>
 import { useTaskStore } from '../stores/taskStore';
 import { useToast } from 'vue-toast-notification';
-
+import { useThemeStore } from '../stores/modules/theme.js';
 export default {
+  
   props: {
     task: {
       type: Object,
       default: null,
     }
   },
+
   data() {
     return {
       taskText: '',
       editingTask: null
+    };
+   
+  },
+
+  setup() {
+    const themeStore = useThemeStore();
+    return {
+      themeStore,
     };
   },
   watch: {

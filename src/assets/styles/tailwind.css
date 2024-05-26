@@ -2,3 +2,22 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+
+.dark-mode {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .dark-mode input[type="text"] {
+    @apply dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:ring-blue-500 text-gray-900;
+  }
+
+  input[type="checkbox"].light-mode {
+    color: white;
+  }
+  
+  /* For dark mode */
+  input[type="checkbox"].dark-mode {
+    color: black;
+  }
