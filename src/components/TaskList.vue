@@ -8,13 +8,14 @@
         <div class="flex items-center">
           <input 
             type="checkbox" 
-            @click="completeTask(task)" 
+            @click="completeTask(task.id)" 
             class="mr-2" 
+            :checked="task.completed"
           />
           <span :class="{ 'line-through': task.completed }">{{ task.text }}</span>
         </div>
         <button
-          @click="deleteTask(task)"
+          @click="deleteTask(task.id)"
           class="px-2 py-1 text-white bg-red-500 rounded-lg hover:bg-red-600"
         >
           Delete
@@ -43,13 +44,10 @@
 </template>
 
 <script>
+import { useTaskStore } from '../stores/taskStore';
+import { useToast } from 'vue-toast-notification';
+
 export default {
-  props: {
-    tasks: {
-      type: Array,
-      required: true
-    }
-  },
   data() {
     return {
       currentPage: 1,
@@ -57,12 +55,14 @@ export default {
     };
   },
   computed: {
+    taskStore() {
+      return useTaskStore();
+    },
     totalPages() {
-      return Math.ceil(this.tasks.length / this.tasksPerPage);
+      return this.taskStore.totalPages;
     },
     paginatedTasks() {
-      const start = (this.currentPage - 1) * this.tasksPerPage;
-      return this.tasks.slice(start, start + this.tasksPerPage);
+      return this.taskStore.paginatedTasks(this.currentPage);
     }
   },
   methods: {
@@ -76,12 +76,17 @@ export default {
         this.currentPage--;
       }
     },
-    completeTask(task) {
-      this.$emit("complete-task", task);
+    completeTask(taskId) {
+      const toast = useToast();
+      this.taskStore.completeTask(taskId);
+      toast.success('Task marked as completed.');
     },
-    deleteTask(task) {
-      this.$emit("delete-task", task);
+    deleteTask(taskId) {
+      const toast = useToast();
+      this.taskStore.deleteTask(taskId);
+      toast.success('Task deleted successfully.');
     }
   }
 };
 </script>
+
