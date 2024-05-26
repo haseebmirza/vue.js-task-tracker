@@ -3,6 +3,8 @@ import { defineStore } from 'pinia';
 export const useTaskStore = defineStore('taskStore', {
   state: () => ({
     tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+    editingTask: null,
+    taskText: '',
   }),
   getters: {
     totalPages: (state) => {
@@ -29,11 +31,32 @@ export const useTaskStore = defineStore('taskStore', {
       this.tasks = this.tasks.filter(t => t.id !== taskId);
       this.updateLocalStorage();
     },
+    editTask(taskData) {
+      const task = this.tasks.find((task) => task.id === taskData.id);
+      
+      if (task) {
+        task.text = taskData.text;
+        this.editingTask = null;
+        this.taskText = '';
+        this.updateLocalStorage();
+      }
+    },
+    setEditingTask(task) {
+      this.editingTask = task;
+      this.taskText = task.text;
+      console.log(this.editingTask);
+      console.log(task);
+    },
+    cancelEdit() {
+      this.editingTask = null;
+      this.taskText = '';
+    },
     updateLocalStorage() {
       localStorage.setItem('tasks', JSON.stringify(this.tasks));
-    }
+    },
   }
 });
+
 
 
 // import { defineStore } from 'pinia';

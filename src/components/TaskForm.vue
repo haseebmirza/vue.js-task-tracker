@@ -1,13 +1,14 @@
 <template>
   <div class="p-6 bg-white rounded-lg shadow-md">
-    <form @submit.prevent="addTask" class="flex items-center space-x-2">
-      <input v-model="task"
+    <h2 class="text-xl font-bold mb-4">Add a task</h2>
+    <form @submit.prevent="handleSubmit" class="flex items-center space-x-2">
+      <input v-model="taskText"
              type="text"
              class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
              placeholder="Add a new task" />
       <button type="submit"
               class="px-4 py-2 text-white bg-blue-500 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        Add Task
+        {{ editingTask ? 'Edit Task' : 'Add Task' }}
       </button>
     </form>
   </div>
@@ -18,24 +19,53 @@ import { useTaskStore } from '../stores/taskStore';
 import { useToast } from 'vue-toast-notification';
 
 export default {
+  props: {
+    task: {
+      type: Object,
+      default: null,
+    }
+  },
   data() {
     return {
-      task: ''
+      taskText: '',
+      editingTask: null
     };
   },
+  watch: {
+    task: {
+      handler(newTask) {
+        if (newTask) {
+          this.taskText = newTask.text;
+          this.editingTask = newTask;
+        }
+      },
+      immediate: true,
+    }
+  },
   methods: {
-    addTask() {
+    handleSubmit() {
       const taskStore = useTaskStore();
       const toast = useToast();
 
-      if (this.task.trim() === '') {
+      if (this.taskText.trim() === '') {
         toast.error('Task cannot be empty.');
         return;
       }
 
-      taskStore.addTask({ text: this.task, completed: false, id: Date.now() });
-      toast.success('Task added successfully.');
-      this.task = '';
+      if (this.editingTask) {
+        taskStore.editTask({ id: this.editingTask.id, text: this.taskText });
+        toast.success('Task edited successfully.');
+      } else {
+        taskStore.addTask({ text: this.taskText, completed: false, id: Date.now() });
+        toast.success('Task added successfully.');
+      }
+
+      this.taskText = '';
+      this.editingTask = null;
+    },
+    editTask(task) {
+      this.taskText = task.text;
+      this.editingTask = task;
     }
   }
 };
