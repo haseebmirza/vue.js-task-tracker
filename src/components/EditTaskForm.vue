@@ -6,6 +6,10 @@
              type="text"
              class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
              placeholder="Edit task" />
+      <input v-model="taskDueDate"
+             type="date"
+             class="px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+             placeholder="Due Date" />
       <button type="submit"
               class="px-4 py-2 text-white bg-blue-500 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
         Save
@@ -38,14 +42,16 @@ import { useThemeStore } from '../stores/modules/theme.js';
   },
     data() {
       return {
-        taskText: this.task.text
+        taskText: this.task.text,
+        taskDueDate: this.task.dueDate
       };
     },
     methods: {
       handleSubmit() {
         const updatedTask = {
           ...this.task,
-          text: this.taskText
+          text: this.taskText,
+          dueDate: this.taskDueDate
         };
         this.$emit('save-task', updatedTask);
       },
@@ -56,6 +62,7 @@ import { useThemeStore } from '../stores/modules/theme.js';
     watch: {
       task(newTask) {
         this.taskText = newTask.text;
+        this.taskDueDate = newTask.dueDate;
       }
     }
   };

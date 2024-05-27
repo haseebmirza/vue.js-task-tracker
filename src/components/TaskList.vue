@@ -26,6 +26,8 @@
           >
             {{ task.text }}
           </span>
+
+          <span class="ml-2 text-gray-500">Due: {{ task.dueDate }}</span>
         </div>
 
         <div>

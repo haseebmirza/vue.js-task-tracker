@@ -5,6 +5,7 @@ export const useTaskStore = defineStore('taskStore', {
     tasks: JSON.parse(localStorage.getItem('tasks')) || [],
     editingTask: null,
     taskText: '',
+    taskDueDate: '',
   }),
   getters: {
     totalPages: (state) => {
@@ -32,23 +33,27 @@ export const useTaskStore = defineStore('taskStore', {
       this.updateLocalStorage();
     },
     editTask(taskData) {
-      const task = this.tasks.find((task) => task.id === taskData.id);
+      const taskr = this.tasks.find((task) => task.id === taskData.id);
       
-      if (task) {
-        task.text = taskData.text;
+      if (taskr) {
+        taskr.text = taskData.text;
+        taskr.dueDate = taskData.dueDate;
         this.editingTask = null;
         this.taskText = '';
+        this.taskDueDate = '';
         this.updateLocalStorage();
       }
     },
     setEditingTask(task) {
       this.editingTask = task;
       this.taskText = task.text;
-      console.log(this.editingTask);
+      this.taskDueDate = task.dueDate;
+      console.log(this.taskDueDate);
       console.log(task);
     },
     cancelEdit() {
       this.editingTask = null;
+      this.taskDueDate = '';
       this.taskText = '';
     },
     updateLocalStorage() {

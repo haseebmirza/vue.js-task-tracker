@@ -6,6 +6,10 @@
              type="text"
              class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
              placeholder="Add a new task" />
+      <input v-model="taskDueDate"
+             type="date"
+             class="px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+             placeholder="Due Date" />
       <button type="submit"
               class="px-4 py-2 text-white bg-blue-500 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
         {{ editingTask ? 'Edit Task' : 'Add Task' }}
@@ -30,6 +34,7 @@ export default {
   data() {
     return {
       taskText: '',
+      taskDueDate: '',
       editingTask: null
     };
    
@@ -46,6 +51,7 @@ export default {
       handler(newTask) {
         if (newTask) {
           this.taskText = newTask.text;
+          this.taskDueDate = newTask.dueDate;
           this.editingTask = newTask;
         }
       },
@@ -63,18 +69,30 @@ export default {
       }
 
       if (this.editingTask) {
-        taskStore.editTask({ id: this.editingTask.id, text: this.taskText });
+        taskStore.editTask({
+          id: this.editingTask.id,
+          text: this.taskText,
+          dueDate: this.taskDueDate
+        });
+        // taskStore.editTask({ id: this.editingTask.id, text: this.taskText });
         toast.success('Task edited successfully.');
       } else {
-        taskStore.addTask({ text: this.taskText, completed: false, id: Date.now() });
+        taskStore.addTask({
+          text: this.taskText,
+          dueDate: this.taskDueDate,
+          completed: false,
+          id: Date.now()
+        });
         toast.success('Task added successfully.');
       }
 
       this.taskText = '';
+      this.taskDueDate = '';
       this.editingTask = null;
     },
     editTask(task) {
       this.taskText = task.text;
+      this.dueDate = task.taskDueDate;
       this.editingTask = task;
     }
   }

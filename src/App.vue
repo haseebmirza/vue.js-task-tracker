@@ -1,4 +1,4 @@
-<template>
+<template >
  <div id="app" class="mx-auto p-4 md:max-w-screen-md" :class="{ 'dark-mode': themeStore.darkMode }">
   <h3>
     <DarkModeToggle />
