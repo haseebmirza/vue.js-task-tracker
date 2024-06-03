@@ -98,7 +98,7 @@ The Task Tracker App is licensed under the MIT License.
 ---------
 
 - [Feature 1]: Add/Edit/Delete Task
-- [Feature 2]: Pagination
+- [Feature 2]: Add Pagination
 - [Feature 3]: Pinia State Management and Local storage
 - [Feature 4]: Light and Dark mode
 
